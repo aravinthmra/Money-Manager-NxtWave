@@ -21,7 +21,7 @@ class MoneyManager extends Component {
     expense: 0,
     title: '',
     amount: '',
-    type: 'INCOME',
+    type: 'Income',
     transactionsList: [],
   }
 
@@ -34,7 +34,11 @@ class MoneyManager extends Component {
   }
 
   onTypeEntry = event => {
-    this.setState({type: event.target.value})
+    console.log(event.target.value)
+    const itemType = event.target.value === 'INCOME' ? 'Income' : 'Expenses'
+    this.setState({
+      type: itemType,
+    })
   }
 
   onAddEntry = () => {
@@ -52,9 +56,9 @@ class MoneyManager extends Component {
           },
         ],
         income:
-          type === 'INCOME' ? prevState.income + intAmount : prevState.income,
+          type === 'Income' ? prevState.income + intAmount : prevState.income,
         expense:
-          type === 'EXPENSES'
+          type === 'Expenses'
             ? prevState.expense + intAmount
             : prevState.expense,
         title: '',
@@ -69,9 +73,9 @@ class MoneyManager extends Component {
         item => item.id !== id,
       ),
       income:
-        type === 'INCOME' ? prevState.income - intAmount : prevState.income,
+        type === 'Income' ? prevState.income - intAmount : prevState.income,
       expense:
-        type === 'EXPENSES' ? prevState.expense - intAmount : prevState.expense,
+        type === 'Expenses' ? prevState.expense - intAmount : prevState.expense,
     }))
   }
 
@@ -132,16 +136,19 @@ class MoneyManager extends Component {
                 <p className="table-cell">Type</p>
                 <p className="table-cell" />
               </li>
-              {transactionsList.map(item => (
-                <TransactionItem
-                  key={item.id}
-                  id={item.id}
-                  title={item.title}
-                  amount={item.amount}
-                  type={item.type}
-                  onDeleteHistoryItem={this.onDeleteHistoryItem}
-                />
-              ))}
+              {transactionsList.map(item => {
+                console.log(item)
+                return (
+                  <TransactionItem
+                    key={item.id}
+                    id={item.id}
+                    title={item.title}
+                    amount={item.amount}
+                    type={item.type}
+                    onDeleteHistoryItem={this.onDeleteHistoryItem}
+                  />
+                )
+              })}
             </ul>
           </div>
         </div>
