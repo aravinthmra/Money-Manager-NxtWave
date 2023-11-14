@@ -40,14 +40,14 @@ class MoneyManager extends Component {
   onAddEntry = () => {
     const {title, amount, type} = this.state
     const intAmount = Number(amount)
-    if (title !== '' && amount !== '') {
+    if (title !== '' && amount !== '' && Number.isInteger(intAmount)) {
       this.setState(prevState => ({
         transactionsList: [
           ...prevState.transactionsList,
           {
             id: uuidv4(),
             title,
-            amount: intAmount,
+            amount,
             type,
           },
         ],
@@ -63,32 +63,21 @@ class MoneyManager extends Component {
     }
   }
 
-  onDeleteHistoryItem = id => {
-    let amount = 0
-    let type = ''
+  onDeleteHistoryItem = (id, type, intAmount) => {
     this.setState(prevState => ({
-      transactionsList: prevState.transactionsList.filter(item => {
-        amount = item.amount
-        type = item.type
-        return item.id !== id
-      }),
-      income: type === 'INCOME' ? prevState.income - amount : prevState.income,
+      transactionsList: prevState.transactionsList.filter(
+        item => item.id !== id,
+      ),
+      income:
+        type === 'INCOME' ? prevState.income - intAmount : prevState.income,
       expense:
-        type === 'EXPENSES' ? prevState.expense - amount : prevState.expense,
+        type === 'EXPENSES' ? prevState.expense - intAmount : prevState.expense,
     }))
-
-    //   income:
-    //     type === 'INCOME'
-    //       ? prevState.income - amount
-    //       : prevState.income,
-    //   expense:
-    //     type === 'EXPENSES'
-    //       ? prevState.expense - mount
-    //       : prevState.expense,
   }
 
   render() {
-    const {income, expense, title, amount, transactionsList} = this.state
+    const {title, amount, transactionsList, income, expense} = this.state
+
     const balance = income - expense
 
     return (
@@ -119,7 +108,7 @@ class MoneyManager extends Component {
               value={amount}
               onChange={this.onAmountEntry}
               placeholder="AMOUNT"
-              type="number"
+              type="text"
             />
 
             <label htmlFor="TYPE">Type</label>
@@ -146,7 +135,10 @@ class MoneyManager extends Component {
               {transactionsList.map(item => (
                 <TransactionItem
                   key={item.id}
-                  itemData={item}
+                  id={item.id}
+                  title={item.title}
+                  amount={item.amount}
+                  type={item.type}
                   onDeleteHistoryItem={this.onDeleteHistoryItem}
                 />
               ))}

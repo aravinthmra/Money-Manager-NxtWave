@@ -1,17 +1,17 @@
 import './index.css'
 
 const TransactionItem = props => {
-  const {itemData, onDeleteHistoryItem} = props
-  const {id, title, amount, type} = itemData
+  const {id, title, amount, type, onDeleteHistoryItem} = props
+  const intAmount = Number(amount)
 
   const onClickingDelete = () => {
-    onDeleteHistoryItem(id)
+    onDeleteHistoryItem(id, type, intAmount)
   }
 
   return (
     <li className="history-item1">
       <p className="table-cell">{title}</p>
-      <p className="table-cell">{amount}</p>
+      <p className="table-cell">Rs {intAmount}</p>
       <p className="table-cell">{type}</p>
       <button
         className="table-cell delete-button1"
